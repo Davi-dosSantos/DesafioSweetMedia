@@ -3,43 +3,61 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
+using System.Text;
+using Simple.Json;
 
 public class POST_Form : MonoBehaviour
 {
-    public Text displayTextName;
-    public Text displayTextEmail;
-    public Text displayTextBirthday;
-    void Start()
-    {
-        StartCoroutine(Upload());
-    }
+    [SerializeField] TMP_InputField displayTextName;
+    [SerializeField] TMP_InputField displayTextEmail;
+    [SerializeField] TMP_InputField displayTextBirthday;
+    private string url = "https://sweetbonus.com.br/sweet-juice/trainee-test/submit?"; 
 
     public void SendForm()
     {
         string name = displayTextName.text;
         string email =  displayTextEmail.text;
-        string birthday = displayTextBirthday.text;
-        StartCoroutine(Upload(name , email, birthday));
+        string birthdate = displayTextBirthday.text;
+        StartCoroutine(Upload(name , email, birthdate));
+        Debug.Log("Form upload complete! " + name + " " + email + " " + birthdate );
     }
 
-    IEnumerator Upload(string name, string email, string birthday)
+    IEnumerator Upload(string name, string email, string birthdate)
     {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection("field1=foo&field2=bar"));
-        formData.Add(new MultipartFormFileSection("my file data", "myfile.txt"));
+        WWWForm formData = new WWWForm();
+        formData.AddField("candidate", "teste");
+        formData.AddField("fullname", name);
+        formData.AddField("email", email);
+        formData.AddField("birthdate", birthdate);
 
-        UnityWebRequest www = UnityWebRequest.Post("https://www.my-server.com/myform", formData);
+        UnityWebRequest www = UnityWebRequest.Post(url, formData);
         yield return www.SendWebRequest();
     
-        if (www.result != UnityWebRequest.Result.Success)
+        if (www.isNetworkError)
         {
             Debug.Log(www.error);
         } 
         else
         {
             Debug.Log("Form upload complete!");
+            var weather = JsonUtility.(www.downloadHandler.text);
+            Debug.Log(www.downloadHandler.text);
         } 
     
+    }
+
+    private bool EmailVerify(string email)
+    {
+        bool validate = email.Contains("@") && email.Contains(".com");
+        if (validate) return true;
+        else return false;
+    }
+    private bool DateVerify(string birthdate)
+    {
+        string[] date = date.split("-");
+
+        return true;
     }
 }
 

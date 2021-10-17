@@ -47,7 +47,7 @@ public class POST_Form : MonoBehaviour
     IEnumerator Upload(string name, string email, string birthdate)
     {
         WWWForm formData = new WWWForm();
-        formData.AddField("candidate", "teste");
+        formData.AddField("candidate", "Davi dos Santos Costa");
         formData.AddField("fullname", name);
         formData.AddField("email", email);
         formData.AddField("birthdate", birthdate);
